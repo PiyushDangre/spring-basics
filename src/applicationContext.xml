@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd">
+
+<!-- Referencing the external property file. Note that there cannot be space between : and classpath or after :  -->
+<context:property-placeholder location="classpath:sportDetails.properties" /> 
+	
+    <!-- Define your beans here -->
+<bean id="equipmentService" class="com.app.myapp.EquipmentServiceImpl"></bean>
+
+<bean id="getCoach" class="com.app.myapp.CricketCoach"> <!-- We can add child classes here which will do different work. Thus this is configurable -->
+	<constructor-arg ref="equipmentService"></constructor-arg>	<!-- Constructor injection -->
+	<property name="teamName" value="Mumbai Indians"></property> <!-- the name needs to match with setter name -->
+	<property name="salary" value="45000"></property>
+	<property name="club" value="${sport.club}"></property> <!-- Read property file referenced above in the start of the file -->
+	
+</bean>
+
+<bean id="myBasketBallCoach" class="com.app.myapp.BasketBallCoach">
+	<property name="equipmentService" ref="equipmentService"></property>
+</bean>
+
+
+
+</beans>
+
+
+
+
+

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd">
+
+<!-- This is another application context file. 
+	- We can define any number of application context files. -->
+
+
+<!-- - Beans can also be defined using annotations unlike the explicit XML
+	   configuration done below. 
+	 - This line of code enables component scanning.  
+	 - Note that the base package needs to be defined below.
+	 - Spring scans for the beans automatically in the base package.
+	 - So , a lot of verbose XML declaration is prevented. -->
+<context:component-scan base-package="com.app.myapp"></context:component-scan> 
+	
+<!-- - This property file needs to be loaded here first before 
+	  accessing the properties using @Value annotation. -->
+<context:property-placeholder location="classpath:sportDetails.properties"/>  	
+
+
+ <!-- Define your beans here 
+ 	- This is the XML way of defining beans.
+ 	- This is more verbose than annotation defining way. -->
+<bean id="equipmentService" class="com.app.myapp.EquipmentServiceImpl"></bean>
+
+<!-- We can add child classes here which will do different work. Thus this is configurable -->
+<!-- The scope for following bean is prototype -->
+<!-- for prototype scope bean, the destroy-method is not called. init-method is called. -->
+<bean id="getCoach" class="com.app.myapp.CricketCoach" 
+	scope="prototype" 
+	init-method="onStartup"
+	destroy-method="onDestroy"> <!--init-method called on bean creation. destroy-method is called before it is destroyed. -->
+	<constructor-arg ref="equipmentService"></constructor-arg>	<!-- Constructor injection -->
+	<property name="teamName" value="Mumbai Indians"></property> <!-- the name needs to match with setter name -->
+	<property name="salary" value="45000"></property>
+	<property name="club" value="${sport.club}"></property> <!-- Read property file referenced above in the start of the file -->	
+</bean>
+
+</beans>
+
+
+
+
+
