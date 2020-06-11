@@ -1,8 +1,12 @@
 package com.app.myapp;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
@@ -11,10 +15,19 @@ import org.springframework.stereotype.Component;
  * - The bean ID will be used while retrieving the bean.
  * - If we do not specify the bean ID, the default bean ID will be name of class with 
  * 	 a lower-case first letter. That means in this example --> tennisCoach will be ID.
+ * 
+ *  We are using @Scope to define the bean scope. Buy default it is Singleton.
+ *  - We can also define other scopes like -->
+ *  	- Prototype
+ *  	- Request
+ *  	- Session
+ *  	- Global-session
+ *  
  * @author Piyush Dangre
  *
  */
 @Component("myTennisCoach") 
+@Scope("singleton")
 public class TennisCoach implements Coach {
 	
 	/**
@@ -90,6 +103,28 @@ public class TennisCoach implements Coach {
 	public void crazyMethod(ClothingService clothingService) {
 		System.out.println("This is crazy method injection method");
 		clothingService.provideClothes();
+	}
+	
+	/**
+	 * Using @PostConstruct , we can define a method that will run just after bean
+	 * initializing starts..ie bean creation starts.
+	 *	- We can initialize DB connection objects etc here. 
+	 */
+	@PostConstruct
+	public void afterBeanInit() {
+		System.out.println("The bean has been initialized.");
+	}
+	
+	/**
+	 * 	- @Predestroy is called before the bean is getting destroyed.
+	 * 	- We can destroy all the instances for resource consumption here.
+	 * 	- Like we can destroy db connection objects etc.
+	 * 	- This method is not called for 'Prototype' scoped beans
+	 * 		--> Reference here -- https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#beans-factory-scopes-prototype
+	 */
+	@PreDestroy
+	public void beforeBeanDestroy() {
+		System.out.println("Bean is gonna get destroy");
 	}
 	
 	@Override
