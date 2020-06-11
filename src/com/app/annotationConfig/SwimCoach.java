@@ -1,7 +1,6 @@
 package com.app.annotationConfig;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Value;
 
 
 /**
@@ -11,6 +10,13 @@ import org.springframework.stereotype.Component;
  *
  */
 public class SwimCoach implements Coach {
+	
+	/**
+	 * Using @Value is possible only because we have setup the 
+	 * @propertySource annotation in class with @Configuration annotation.
+	 */
+	@Value("${sport.club}")
+	private String teamName;
 	
 	/**
 	 * This will need to be injected using @Configuration class.
@@ -50,5 +56,11 @@ public class SwimCoach implements Coach {
 	public void getCostume() {
 		this.costumeService.buyCostume();
 	}
+	
+	@Override
+	public String getTeamName() {
+		return teamName;
+	}
+
 
 }

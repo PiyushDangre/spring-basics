@@ -13,5 +13,7 @@ public class AnnotationApp {
 			Coach swimCoach = ctx.getBean("swimCoach", Coach.class);
 			swimCoach.run();
 			swimCoach.getCostume();
+			String teamName = swimCoach.getTeamName();
+			System.out.println(teamName);
 		}
 }

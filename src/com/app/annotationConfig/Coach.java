@@ -9,4 +9,6 @@ public interface Coach {
 	public void getCoachDetails();
 
 	public void getCostume();
+
+	String getTeamName();
 }
