@@ -14,6 +14,6 @@ public class AnnotationApp {
 			swimCoach.run();
 			swimCoach.getCostume();
 			String teamName = swimCoach.getTeamName();
-			System.out.println(teamName);
+			System.out.println(teamName); // Prints value from ssportDetails.properties file
 		}
 }
