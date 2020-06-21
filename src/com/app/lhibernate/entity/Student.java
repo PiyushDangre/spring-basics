@@ -22,6 +22,7 @@ public class Student {
 	
 	@Id
 	@Column(name="id")
+	// We can also create our own ID generation strategy by using our own business logic. We have to override IdentifierGenerator class.
 	@GeneratedValue(strategy=GenerationType.IDENTITY)  // For auto increment. As the id column has been declared as auto increment in DB
 	private Long id;
 	
