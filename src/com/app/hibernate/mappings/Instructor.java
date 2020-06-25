@@ -2,12 +2,16 @@ package com.app.hibernate.mappings;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
+@Entity
+@Table(name="instructor")
 public class Instructor {
 	
 	@Id	
@@ -47,7 +51,7 @@ public class Instructor {
 		
 	}
 
-	public Instructor(int id, String firstName, String lastName, String email, InstructorDetail instructorDetail) {
+	public Instructor(String firstName, String lastName, String email) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;

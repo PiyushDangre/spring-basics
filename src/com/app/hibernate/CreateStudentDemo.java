@@ -6,16 +6,24 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
+import com.app.hibernate.mappings.Instructor;
+import com.app.hibernate.mappings.InstructorDetail;
 import com.app.lhibernate.entity.Student;
 
 public class CreateStudentDemo {
 	
 	public static void main(String[] args) {
 		
+		/**
+		 * Have a look over the hibernate configuration file setup in classpath.
+		 * The name of hibernate config file is hibernate.cfg.xml
+		 */
 		// Create session factory (To be done only once in the app. )
 		SessionFactory sessionFactory = new Configuration()
 										.configure("hibernate.cfg.xml")
 										.addAnnotatedClass(Student.class)
+										.addAnnotatedClass(InstructorDetail.class)
+										.addAnnotatedClass(Instructor.class)
 										.buildSessionFactory();
 		
 		// Get session from factory
@@ -115,12 +123,71 @@ public class CreateStudentDemo {
 			session.createQuery("delete from Student where id=2")
 				   .executeUpdate();
 			session.getTransaction().commit();
-
 			
-		}finally {
+			/**
+			 * -- ONE TO ONE MAPPING
+			 */
+			Instructor instructor = new Instructor("Mukesh", "Ambani", "mukesh.richboy@jio.com");
+			InstructorDetail instrDetails = new InstructorDetail("youtube.com/getrich", "Get rich in 30 days");
+			
+			/**
+			 * Associate both of the objects.
+			 * Just calling the setter method will associate the objects in memory.
+			 * 
+			 * Because we are using one to one mapping with cascading set to all,
+			 * Whenever an entry is inserted into Instructor, an entry is made in Instructor Details too.
+			 * Whenever we delete an instructor, corresponding entry in instructor_detail also gets deleted.
+			 * 
+			 * This is Unidirectional cascading. That means if we make changes to Instructor,
+			 * the changes are also replicated in Instructor_details table.
+			 */
+			instructor.setInstructorDetail(instrDetails);
+			
+			session = sessionFactory.getCurrentSession();
+			session.beginTransaction();
+			
+			session.save(instructor);
+			
+			session.getTransaction().commit();
+			
+			System.out.println("Entry should be done in both the tables.");
+			
+			/**
+			 * -- BIDIRECTIONAL RELATIONSHIP
+			 * We have setup bidirectional relationship between the Instructor and Instructor_detail
+			 * objects by virtue of the OneToOne annotation. Look into respective entities.
+			 * 
+			 * Here we are trying to get the Instructor object from an instance of InstructorDetail.
+			 * This means that whatever change we make to the InstructorDetail also applies to Instructor.
+			 * This is reverse of unidirectional relationship above. This is bi-directional.
+			 * Thus, no change in schema was required and we could achieve a reverse flow.
+			 */
+			session = sessionFactory.getCurrentSession();
+			session.beginTransaction();
+			
+			int id = 1 ;
+			InstructorDetail iDetail = session.get(InstructorDetail.class, id);
+			Instructor i = iDetail.getInstructor();
+			
+			session.getTransaction().commit();
+			
+			System.out.println("\n Associated Instructor object is -");
+			System.out.println(i); // Prints the associated Instructor object (In our case, Instructor with ID = 1)
+			
+			
+			/**
+			 * So if we delete instructorDetail, the instructor will also be deleted.
+			 * 		session.delete(iDetail)
+			 * 
+			 * This is because cascade=all has been setup in InstructorDetail entity.
+			 */
+			
+		}catch(Exception e){
+			e.printStackTrace();
 			
 		}
-		
-		
+		finally {
+			session.close();
 		}
+	}
 }
